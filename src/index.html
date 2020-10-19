@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Practice Day 3</title>
+
+    <style>
+        table {
+            width: 100vw;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ffdf6d;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid black;
+            width: 20%;
+        }
+
+        #stud {
+            margin-top: 1%;
+            border: 3px solid #2b9cff;
+            border-radius: 10px;
+            height: 25px;
+            outline: none;
+        }
+
+        .deleteStudent {
+            cursor: pointer;
+        }
+
+        .calc {
+            width: 100vw;
+            height: 15vh;
+            border: 1px solid black;
+            margin-top: 1%;
+        }
+
+        select {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <table id="myTable">
+        <tr>
+            <th>Ім'я студента</th>
+            <th>Група</th>
+            <th>Дата народження</th>
+            <th>Здав / Не здав роботу</th>
+            <th>Видалити студента</th>
+        </tr>
+        <tr v-for="student in filteredList" id="row">
+            <td>{{ student.name }}</td>
+            <td>{{ student.group }}</td>
+            <td>{{ student.birthDate }}</td>
+            <td><input type="checkbox" name="isDone" v-if="student.bool===true" checked disabled>
+                <input type="checkbox" name="isDone" v-else disabled></td>
+            <td class="deleteStudent"><input type="button" @click="deleteStudent" value="Видалити"></td>
+        </tr>
+    </table>
+
+    <input id="stud" type="text" v-model="findStudent" placeholder="Enter students name">
+    <br>
+
+    <div class="calc">
+        <span style="font-weight: bold; font-family: 'Century Gothic'">Конвертер валют</span>
+        <br><br>
+        <span> Конвертувати із: </span>
+        <select name="convertFrom" id="1" v-model="from">
+            <option value="" v-for="current in money">{{ current.ccy }}</option>
+        </select>
+        <br>
+        <span>Конвертувати в : </span>
+        <select name="convertTo" id="2" v-model="to">
+            <option value="" v-for="current in money">{{ current.ccy }}</option>
+        </select>
+        <br>
+        <br>
+        <span>Кількість валюти:  </span><input type="text" v-model="amount" required onchange="currentCalc(from, to, amount)">
+
+    </div>
+
+</div>
+<script src="main.js"></script>
+</body>
+</html>
