@@ -8,7 +8,7 @@
         <th>Здав / Не здав роботу</th>
         <th>Видалити студента</th>
       </tr>
-      <tr v-for="student in filteredList" v-bind:key="item._id" id="row">
+      <tr v-for="student in filteredList" v-bind:key="student._id" id="row">
         <td>{{ student.name }}</td>
         <td>{{ student.group }}</td>
         <td>{{ student.birthDate }}</td>
