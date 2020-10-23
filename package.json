@@ -2,7 +2,7 @@
   "name": "p2day1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,11 +10,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "vue-loader": "^15.9.3",
+    "vue-loader-plugin": "^1.3.0",
+    "vue-template-compiler": "^2.6.12",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
     "axios": "^0.20.0",
     "vue-axios": "^3.0.1",
+    "vue-loaders": "^4.1.1",
     "vue.js": "^0.3.2",
     "webpack": "^5.1.3",
     "webpack-cli": "^3.3.12"
