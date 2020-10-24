@@ -2,40 +2,62 @@
   <div>
     <table id="myTable">
       <tr>
+        <th>Фото</th>
         <th>Ім'я студента</th>
         <th>Група</th>
-        <th>Дата народження</th>
+        <th>Оцінка</th>
         <th>Здав / Не здав роботу</th>
+        <th>Редагувати студента</th>
         <th>Видалити студента</th>
       </tr>
       <tr v-for="student in filteredList" v-bind:key="student._id" id="row">
-        <td>{{ student.name }}</td>
-        <td>{{ student.group }}</td>
-        <td>{{ student.birthDate }}</td>
-        <td><input type="checkbox" name="isDone" v-if="student.bool===true" checked disabled>
-          <input type="checkbox" name="isDone" v-else disabled></td>
-        <td class="deleteStudent"><input type="button" @click="deleteStudent" value="Видалити"></td>
+        <td><img width="100px" height="100px" v-bind:src="student.photo" alt=""></td>
+
+        <template v-if="student._id==editId">
+          <td><input type="text" v-model="student.name" value="student.name"></td>
+          <td><input type="text" v-model="student.group" value="student.group"></td>
+          <td><input type="number" v-model="student.mark" value="student.mark"></td>
+          <template v-if="student.isDonePr===true">
+            <td><input type="checkbox" checked v-model="student.isDonePr"> </td>
+          </template>
+          <template v-else>
+            <td><input type="checkbox" v-model="student.isDonePr"></td>
+          </template>
+          <td class="deleteStudent"><input type="button" @click="updateStudent(editId)" value="Зберегти"></td>
+
+        </template>
+
+        <template v-else>
+          <td>{{ student.name }}</td>
+          <td>{{ student.group }}</td>
+          <td>{{ student.mark }}</td>
+          <td><input type="checkbox" name="isDone" v-if="student.isDonePr===true" checked disabled><input type="checkbox" name="isDone" v-else disabled>
+          </td>
+          <td class="deleteStudent"><input type="button" @click="editForm(student._id)" value="Редагувати"></td>
+          <td class="deleteStudent"><input type="button" @click="deleteStudent(student._id)" value="Видалити"></td>
+        </template>
+
       </tr>
     </table>
 
     <input id="stud" type="text" v-model="findStudent" placeholder="Enter students name">
-    <!--<div class="calc">
-   <span style="font-weight: bold; font-family: 'Century Gothic'">Конвертер валют</span>
-   <br><br>
-   <span> Конвертувати із: </span>
-   <select name="convertFrom" id="1" v-model="from">
-       <option value="" v-for="current in money">{{ current.ccy }}</option>
-   </select>
-   <br>
-   <span>Конвертувати в : </span>
-   <select name="convertTo" id="2" v-model="to">
-       <option value="" v-for="current in money">{{ current.ccy }}</option>
-   </select>
-   <br>
-   <br>
-   <span>Кількість валюти:  </span><input type="text" v-model="amount" required onchange="currentCalc(from, to, amount)">
 
-  </div> -->
+    <div class="addBlock">
+      <span>Ім'я студента: </span>
+      <input type="text" placeholder="Name" v-model="addedStudent.name" required>
+      <br>
+      <span>Група: </span>
+      <input type="text" v-model="addedStudent.group">
+      <br>
+      <span>Оцінка: </span>
+      <input type="number" min="1" max="5" v-model="addedStudent.mark" required>
+      <br>
+      <span>Здав / Не здав роботу: </span>
+      <input type="checkbox" v-model="addedStudent.isDonePr" required>
+      <br>
+
+      <input type="button" value="Додати" @click="addStudent">
+    </div>
   </div>
 </template>
 
@@ -47,29 +69,51 @@ export default {
   data: function () {
     return {
       findStudent: "",
-      amount: 0,
-      from: 0,
-      to: 0,
-      convert: 0,
       students: [],
-      money: []
+      editId: "",
+      addedStudent: {}
     };
   },
   mounted: function () {
     axios.get("http://46.101.212.195:3000/students").then((response) => {
-      console.log(response.data)
+      console.log(response.data);
       this.students = response.data;
     })
   },
   methods: {
-    deleteStudent: function () {
+    deleteStudent: function (id) {
       myTable.addEventListener('click', function (evt) {
         if (evt.target.closest('.deleteStudent')) {
           evt.target.closest('tr').remove()
         }
       })
+      axios.delete(`http://46.101.212.195:3000/students/${id}`).then((response) => {
+        console.log(response.data);
+      })
+    },
+    addStudent: function () {
+      axios.post("http://46.101.212.195:3000/students", this.addedStudent).then((response) => {
+        console.log(response.data);
+        this.students.push(response.data);
+      })
+    },
+    editForm: function (id) {
+      this.editId = id;
+    },
+    updateStudent: function (id) {
+      let foundStudent = this.students.find((element)=>{
+        return element._id == id;
+      });
+      axios.put("http://46.101.212.195:3000/students/"+id, {
+        name: foundStudent.name,
+        group: foundStudent.group,
+        mark: foundStudent.mark,
+        isDonePr: foundStudent.isDonePr
+      })
+      this.editId = 0;
     }
   },
+
   computed: {
     filteredList: function () {
       let stud = this.findStudent;
@@ -113,7 +157,7 @@ td, th {
   cursor: pointer;
 }
 
-.calc {
+.addBlock {
   width: 100vw;
   height: 15vh;
   border: 1px solid black;
