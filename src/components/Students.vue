@@ -18,20 +18,22 @@
           <td><input type="text" v-model="student.group" value="student.group"></td>
           <td><input type="number" v-model="student.mark" value="student.mark"></td>
           <template v-if="student.isDonePr===true">
-            <td><input type="checkbox" checked v-model="student.isDonePr"> </td>
+            <td><input type="checkbox" checked v-model="student.isDonePr"></td>
           </template>
           <template v-else>
             <td><input type="checkbox" v-model="student.isDonePr"></td>
           </template>
           <td class="deleteStudent"><input type="button" @click="updateStudent(editId)" value="Зберегти"></td>
-
         </template>
 
         <template v-else>
-          <td>{{ student.name }}</td>
+          <td>
+            <router-link v-bind:to="'/student-info/'+student._id">{{ student.name }}</router-link>
+          </td>
           <td>{{ student.group }}</td>
           <td>{{ student.mark }}</td>
-          <td><input type="checkbox" name="isDone" v-if="student.isDonePr===true" checked disabled><input type="checkbox" name="isDone" v-else disabled>
+          <td><input type="checkbox" name="isDone" v-if="student.isDonePr===true" checked disabled><input
+              type="checkbox" name="isDone" v-else disabled>
           </td>
           <td class="deleteStudent"><input type="button" @click="editForm(student._id)" value="Редагувати"></td>
           <td class="deleteStudent"><input type="button" @click="deleteStudent(student._id)" value="Видалити"></td>
@@ -58,6 +60,12 @@
 
       <input type="button" value="Додати" @click="addStudent">
     </div>
+
+
+    <div class="addBlock">
+      <input type="number" v-model="number" v-on:change="roundNumber(number)"><br>
+      <span>Number: {{ this.roundedNumber }}</span>
+    </div>
   </div>
 </template>
 
@@ -66,12 +74,17 @@ import Vue from 'vue'
 import axios from 'axios'
 
 export default {
+  props: {
+    id: "",
+  },
   data: function () {
     return {
       findStudent: "",
       students: [],
       editId: "",
-      addedStudent: {}
+      addedStudent: {},
+      number: null,
+      roundedNumber: null
     };
   },
   mounted: function () {
@@ -101,16 +114,19 @@ export default {
       this.editId = id;
     },
     updateStudent: function (id) {
-      let foundStudent = this.students.find((element)=>{
-        return element._id == id;
+      let foundStudent = this.students.find((element) => {
+        return element._id === id;
       });
-      axios.put("http://46.101.212.195:3000/students/"+id, {
+      axios.put("http://46.101.212.195:3000/students/" + id, {
         name: foundStudent.name,
         group: foundStudent.group,
         mark: foundStudent.mark,
         isDonePr: foundStudent.isDonePr
       })
       this.editId = 0;
+    },
+    roundNumber: function (number) {
+      this.roundedNumber = (parseInt(number * 100)) / 100;
     }
   },
 
