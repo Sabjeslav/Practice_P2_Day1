@@ -8,17 +8,17 @@ const store = new Vuex.Store({
     plugins: [createPersistedState()],
     state: {
         count: 0,
-        theme: ""
+        theme: "",
     },
     mutations: {
         setCount: (state, count) => state.count = count,
-        setStyle: (state, style) => state.theme = style,
+        setTheme: (state, theme) => state.theme = theme,
     },
     getters: {
         getCount: (state) => {
             return state.count
         },
-        getStyle: (state) => {
+        getTheme: (state) => {
             return state.theme
         }
     }

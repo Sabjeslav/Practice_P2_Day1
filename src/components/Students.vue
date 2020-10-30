@@ -1,5 +1,6 @@
 <template>
-  <div v-bind:class="theme == 'true' ? 'blue':'red'">
+  <div>
+    <link rel="stylesheet" :href="`./src/styles/${theme ? 'blue' : 'red'}.css`">
     <table id="myTable">
       <tr>
         <th>Фото</th>
@@ -104,10 +105,6 @@ export default {
     console.log(responce.data)
     this.students = responce.data
     this.$store.commit('setCount',this.students.length)
-
-    this.theme = this.$store.getters.getStyle
-    if (this.theme == 'true') this.theme = true
-    else if (this.theme == 'false') this.theme = false
   },
   methods: {
     deleteStudent: function (id) {
@@ -145,7 +142,7 @@ export default {
       this.roundedNumber = (parseInt(number * 100)) / 100;
     },
     changeTheme: function () {
-      this.$store.commit('setStyle', this.theme)
+      this.$store.commit('setTheme', !this.$store.getters.getTheme)
     }
   },
 
@@ -159,6 +156,9 @@ export default {
     },
     getCount () {
       return this.$store.getters.getCount
+    },
+    theme () {
+      return this.$store.getters.getTheme
     }
   }
 }
