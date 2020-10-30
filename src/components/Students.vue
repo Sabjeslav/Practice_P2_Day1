@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="theme == 'true' ? 'blue':'red'">
     <table id="myTable">
       <tr>
         <th>Фото</th>
@@ -65,6 +65,16 @@
     <div class="addBlock">
       <input type="number" v-model="number" v-on:change="roundNumber(number)"><br>
       <span>Number: {{ this.roundedNumber }}</span>
+      <br>
+      <span>
+        Кількість студентів: {{ getCount }}
+      </span>
+      <br>
+
+      <p><input type="radio" value='false' v-model="theme" @click="changeTheme">Тема 1</p>
+
+      <p><input type="radio" value='true' v-model="theme" @click="changeTheme">Тема 2</p>
+
     </div>
   </div>
 </template>
@@ -72,6 +82,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
+import Vuex from 'vuex'
 
 export default {
   props: {
@@ -84,14 +95,19 @@ export default {
       editId: "",
       addedStudent: {},
       number: null,
-      roundedNumber: null
+      roundedNumber: null,
+      theme: "",
     };
   },
-  mounted: function () {
-    axios.get("http://46.101.212.195:3000/students").then((response) => {
-      console.log(response.data);
-      this.students = response.data;
-    })
+  mounted: async function () {
+    let responce = await axios.get("http://46.101.212.195:3000/students");
+    console.log(responce.data)
+    this.students = responce.data
+    this.$store.commit('setCount',this.students.length)
+
+    this.theme = this.$store.getters.getStyle
+    if (this.theme == 'true') this.theme = true
+    else if (this.theme == 'false') this.theme = false
   },
   methods: {
     deleteStudent: function (id) {
@@ -127,6 +143,9 @@ export default {
     },
     roundNumber: function (number) {
       this.roundedNumber = (parseInt(number * 100)) / 100;
+    },
+    changeTheme: function () {
+      this.$store.commit('setStyle', this.theme)
     }
   },
 
@@ -137,6 +156,9 @@ export default {
         if (stud === "") return true;
         else return elem.name.indexOf(stud) > -1;
       })
+    },
+    getCount () {
+      return this.$store.getters.getCount
     }
   }
 }

@@ -9,12 +9,14 @@
         <div>{{student.isDonePr ? 'Здав': 'Не здав'}}</div>
       </div>
     </div>
+    <span>{{getCount}}</span>
   </div>
-<!--  <StudentAvatar v-if="showScaledAvatar" :photo="student.photo" @close="showScaledAvatar = false" />-->
+
 </template>
 <script>
 import Vue from 'vue'
 import axios from 'axios'
+import Vuex from 'vuex'
 
 export default {
   props:{
@@ -29,7 +31,18 @@ export default {
     axios.get("http://46.101.212.195:3000/students/"+this.id).then((responce) => {
       console.log(responce.data)
       this.student = responce.data;
+
     })
+
+    // let responce = await axios.get("http://46.101.212.195:3000/students");
+    // console.log(responce.data)
+    // this.students = responce.data
+    // this.$store.commit('setCount',this.students.length)
+  },
+  computed: {
+    getCount () {
+      return this.$store.getters.getCount
+    }
   }
 }
 
