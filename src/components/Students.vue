@@ -71,9 +71,9 @@
       </span>
       <br>
 
-      <p><input type="radio" value='false' v-model="theme" @click="changeTheme">Тема 1</p>
+      <input type="radio" value='false' v-model="theme" @click="changeTheme">Red
 
-      <p><input type="radio" value='true' v-model="theme" @click="changeTheme">Тема 2</p>
+      <input type="radio" value='true' v-model="theme" @click="changeTheme">Blue
 
     </div>
   </div>
