@@ -22,6 +22,7 @@
     "vue-axios": "^3.0.1",
     "vue-loaders": "^4.1.1",
     "vue-router": "^3.4.7",
+    "vue-wysiwyg": "^1.7.2",
     "vue.js": "^0.3.2",
     "vuex": "^3.5.1",
     "vuex-persistedstate": "^4.0.0-beta.1",

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <link rel="stylesheet" :href="`./src/styles/${theme ? 'blue' : 'red'}.css`">
+    <link rel="stylesheet" :href="`./styles/${theme ? 'blue' : 'red'}.css`">
     <table id="myTable">
       <tr>
         <th>Фото</th>
@@ -37,7 +37,7 @@
               type="checkbox" name="isDone" v-else disabled>
           </td>
           <td class="deleteStudent"><input type="button" @click="editForm(student._id)" value="Редагувати"></td>
-          <td class="deleteStudent"><input type="button" @click="deleteStudent(student._id)" value="Видалити"></td>
+          <td class="deleteStudent"><input type="button" v-on:click.prevent="deleteStudent(student._id)" v-show="student.group == getCurrentUser.group" value="Видалити"></td>
         </template>
 
       </tr>
@@ -72,7 +72,7 @@
       </span>
       <br>
 
-      <input type="radio" value='false' v-model="theme" @click="changeTheme">Red
+      <input type="radio" value='false' v-model="theme" @click="changeTheme">Default
 
       <input type="radio" value='true' v-model="theme" @click="changeTheme">Blue
 
@@ -97,7 +97,6 @@ export default {
       addedStudent: {},
       number: null,
       roundedNumber: null,
-      theme: "",
     };
   },
   mounted: async function () {
@@ -159,6 +158,9 @@ export default {
     },
     theme () {
       return this.$store.getters.getTheme
+    },
+    getCurrentUser () {
+      return this.$store.getters.getUser
     }
   }
 }
